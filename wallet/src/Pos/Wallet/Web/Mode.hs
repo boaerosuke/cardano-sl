@@ -81,8 +81,7 @@ import           Pos.Ssc.Types                     (HasSscContext (..), SscBlock
 import           Pos.StateLock                     (StateLock)
 import           Pos.Txp                           (MempoolExt, MonadTxpLocal (..),
                                                     MonadTxpMem, Utxo, addrBelongsToSet,
-                                                    getUtxoModifier, txNormalize,
-                                                    txProcessTransaction)
+                                                    getUtxoModifier)
 import qualified Pos.Txp.DB                        as DB
 import           Pos.Util                          (Some (..))
 import           Pos.Util.CompileInfo              (HasCompileInfo)
@@ -106,6 +105,8 @@ import           Pos.Wallet.Redirect               (MonadBlockchainInfo (..),
                                                     connectedPeersWebWallet,
                                                     localChainDifficultyWebWallet,
                                                     networkChainDifficultyWebWallet,
+                                                    txpNormalizeWebWallet,
+                                                    txpProcessTxWebWallet,
                                                     waitForUpdateWebWallet)
 import           Pos.Wallet.WalletMode             (WalletMempoolExt)
 import           Pos.Wallet.Web.Account            (AccountMode, GenSeed (RandomSeed))
@@ -333,8 +334,8 @@ type instance MempoolExt WalletWebMode = WalletMempoolExt
 
 instance (HasConfiguration, HasInfraConfiguration, HasCompileInfo) =>
          MonadTxpLocal WalletWebMode where
-    txpNormalize = txNormalize
-    txpProcessTx = txProcessTransaction
+    txpNormalize = txpNormalizeWebWallet
+    txpProcessTx = txpProcessTxWebWallet
 
 instance MonadKeysRead WalletWebMode where
     getSecret = getSecretDefault

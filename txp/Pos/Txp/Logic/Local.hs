@@ -5,7 +5,9 @@
 -- Local transaction is transaction which hasn't been added in the blockchain yet.
 
 module Pos.Txp.Logic.Local
-       ( txProcessTransaction
+       ( TxpProcessTransactionMode
+       , TxpNormalizeMempoolMode
+       , txProcessTransaction
        , txProcessTransactionNoLock
        , txNormalize
        , txGetPayload
@@ -63,17 +65,20 @@ instance HasConfiguration => MonadUtxoRead ProcessTxMode where
 instance MonadGState ProcessTxMode where
     gsAdoptedBVData = view ptcAdoptedBVData
 
+type TxpProcessTransactionMode ctx m =
+    ( TxpLocalWorkMode ctx m
+    , MonadReader ctx m
+    , HasLens' ctx StateLock
+    , HasLens' ctx StateLockMetrics
+    , MonadMask m
+    , MempoolExt m ~ ()
+    )
+
 -- | Process transaction. 'TxId' is expected to be the hash of
 -- transaction in 'TxAux'. Separation is supported for optimization
 -- only.
 txProcessTransaction
-    :: ( TxpLocalWorkMode ctx m
-       , MonadReader ctx m
-       , HasLens' ctx StateLock
-       , HasLens' ctx StateLockMetrics
-       , MonadMask m
-       , MempoolExt m ~ ()
-       )
+    :: TxpProcessTransactionMode ctx m
     => (TxId, TxAux) -> m (Either ToilVerFailure ())
 txProcessTransaction itw =
     withStateLock LowPriority "txProcessTransaction" $ \__tip -> txProcessTransactionNoLock itw
@@ -159,15 +164,16 @@ txProcessTransactionNoLock itw@(txId, txAux) = reportTipMismatch $ runExceptT $ 
             (Left err@(ToilTipsMismatch {})) -> reportError (pretty err)
             _                                -> pass
 
+type TxpNormalizeMempoolMode ctx m =
+    ( TxpLocalWorkMode ctx m
+    , MonadSlots ctx m
+    , MempoolExt m ~ ()
+    )
+
 -- | 1. Recompute UtxoView by current MemPool
 -- | 2. Remove invalid transactions from MemPool
 -- | 3. Set new tip to txp local data
-txNormalize
-    :: ( TxpLocalWorkMode ctx m
-       , MonadSlots ctx m
-       , MempoolExt m ~ ()
-       )
-    => m ()
+txNormalize :: TxpNormalizeMempoolMode ctx m => m ()
 txNormalize = getCurrentSlot >>= \case
     Nothing -> do
         tip <- GS.getTip
