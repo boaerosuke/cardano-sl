@@ -184,8 +184,6 @@ verifyInputs VTxContext {..} resolvedInputs TxAux {..} = do
     checkInput i (txIn, toa@(TxOutAux txOut@TxOut{..})) witness = do
         unless (checkSpendingData txOutAddress witness) $
             throwError $ ToilWitnessDoesntMatch i txIn txOut witness
-        when (isTxInUnknown txIn && vtcVerifyAllIsKnown) $ throwError $
-            ToilUnknownInput i txIn
         whenLeft (checkWitness toa witness) $ \err ->
             throwError $ ToilInvalidWitness i witness err
 
