@@ -72,8 +72,7 @@ import           Pos.Core                       (BlockVersionData, CoreConfigura
                                                  GenesisConfiguration (..),
                                                  GenesisInitializer (..),
                                                  GenesisSpec (..), HasConfiguration,
-                                                 IsHeader, SlotId,
-                                                 TestnetDistribution (..), Timestamp (..),
+                                                 IsHeader, SlotId, Timestamp (..),
                                                  genesisSecretKeys, withGenesisSpec)
 import           Pos.Core.Configuration         (HasGenesisBlockVersionData,
                                                  withGenesisBlockVersionData)
@@ -103,9 +102,9 @@ import           Pos.Slotting                   (HasSlottingVar (..), MonadSlots
                                                  getCurrentSlotSimple,
                                                  mkSimpleSlottingVar)
 import           Pos.Slotting.MemState          (MonadSlotsData)
-import           Pos.Ssc.Types                  (SscBlock)
 import           Pos.Ssc.Extra                  (SscMemTag, SscState, mkSscState)
 import           Pos.Ssc.GodTossing             (HasGtConfiguration)
+import           Pos.Ssc.Types                  (SscBlock)
 import           Pos.Txp                        (GenericTxpLocalData, MempoolExt,
                                                  MonadTxpLocal (..), TxpGlobalSettings,
                                                  TxpHolderTag, mkTxpLocalData,
@@ -168,7 +167,6 @@ genGenesisInitializer :: HasGenesisBlockVersionData => Gen GenesisInitializer
 genGenesisInitializer = do
     tiTestBalance <- arbitrary
     tiFakeAvvmBalance <- arbitrary
-    let tiDistribution = TestnetRichmenStakeDistr
     tiSeed <- arbitrary
     return TestnetInitializer {..}
 
