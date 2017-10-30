@@ -26,6 +26,7 @@ dev: &dev
             fakeAvvmBalance:
               count: 10
               oneBalance: 100000
+            avvmBalanceFactor: 1
             seed: 0
         blockVersionData: &dev_core_genesis_spec_blockVersionData
           scriptVersion:     0
@@ -149,6 +150,7 @@ bench: &bench
             fakeAvvmBalance:
               count: 100
               oneBalance: 15000000
+            avvmBalanceFactor: 1
             seed: 0
         blockVersionData:
           <<: *dev_core_genesis_spec_blockVersionData
@@ -14909,6 +14911,7 @@ devnet: &devnet
             fakeAvvmBalance:
               count: 100
               oneBalance: 15000000
+            avvmBalanceFactor: 1
             seed: 0
 
   node:
@@ -14951,6 +14954,7 @@ testnet_public_full: &testnet_public_full
             fakeAvvmBalance:
               count: 100
               oneBalance: 15000000
+            avvmBalanceFactor: 1
             seed: 0
 
 testnet_staging_full: &testnet_staging_full
