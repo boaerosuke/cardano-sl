@@ -76,7 +76,7 @@ import           Pos.Slotting.Impl.Sum             (currentTimeSlottingSum,
                                                     getCurrentSlotInaccurateSum,
                                                     getCurrentSlotSum)
 import           Pos.Slotting.MemState             (HasSlottingVar (..), MonadSlotsData)
-import           Pos.Ssc.GodTossing                (HasGtConfiguration)
+import           Pos.Ssc.GodTossing                (HasSscConfiguration)
 import           Pos.Ssc.Types                     (HasSscContext (..), SscBlock)
 import           Pos.StateLock                     (StateLock)
 import           Pos.Txp                           (MempoolExt, MonadTxpLocal (..),
@@ -255,18 +255,18 @@ instance HasConfiguration => MonadDB WalletWebMode where
     dbWriteBatch = dbWriteBatchDefault
     dbDelete = dbDeleteDefault
 
-instance (HasConfiguration, HasGtConfiguration) =>
+instance (HasConfiguration, HasSscConfiguration) =>
          MonadBlockDBGenericWrite BlockHeader Block Undo WalletWebMode where
     dbPutBlund = dbPutBlundDefault
 
-instance (HasConfiguration, HasGtConfiguration) =>
+instance (HasConfiguration, HasSscConfiguration) =>
          MonadBlockDBGeneric BlockHeader Block Undo WalletWebMode
   where
     dbGetBlock  = dbGetBlockDefault
     dbGetUndo   = dbGetUndoDefault
     dbGetHeader = dbGetHeaderDefault
 
-instance (HasConfiguration, HasGtConfiguration) =>
+instance (HasConfiguration, HasSscConfiguration) =>
          MonadBlockDBGeneric (Some IsHeader) SscBlock () WalletWebMode
   where
     dbGetBlock  = dbGetBlockSscDefault
@@ -285,7 +285,7 @@ instance MonadUpdates WalletWebMode where
     waitForUpdate = waitForUpdateWebWallet
     applyLastUpdate = applyLastUpdateWebWallet
 
-instance (HasConfiguration, HasGtConfiguration, HasInfraConfiguration) =>
+instance (HasConfiguration, HasSscConfiguration, HasInfraConfiguration) =>
          MonadBlockchainInfo WalletWebMode where
     networkChainDifficulty = networkChainDifficultyWebWallet
     localChainDifficulty = localChainDifficultyWebWallet
@@ -317,7 +317,7 @@ instance HasConfiguration => MonadBalances WalletWebMode where
     getOwnUtxos = getOwnUtxosDefault
     getBalance = getBalanceDefault
 
-instance (HasConfiguration, HasGtConfiguration, HasInfraConfiguration, HasCompileInfo)
+instance (HasConfiguration, HasSscConfiguration, HasInfraConfiguration, HasCompileInfo)
         => MonadTxHistory WalletWebMode where
     getBlockHistory = getBlockHistoryDefault
     getLocalHistory = getLocalHistoryDefault

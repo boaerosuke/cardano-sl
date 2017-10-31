@@ -67,7 +67,7 @@ import           Pos.Slotting                     (HasSlottingVar (..), MonadSlo
                                                    MonadSlotsData, SlottingData,
                                                    currentTimeSlottingSimple)
 import           Pos.Ssc.GodTossing               (SscMemTag, SscState,
-                                                   HasGtConfiguration, SscBlock,
+                                                   HasSscConfiguration, SscBlock,
                                                    mkSscState)
 import           Pos.Txp                          (GenericTxpLocalData, MempoolExt,
                                                    TxpGlobalSettings, TxpHolderTag,
@@ -105,7 +105,7 @@ type MonadBlockGenBase m
        , HasConfiguration
        , HasUpdateConfiguration
        , HasInfraConfiguration
-       , HasGtConfiguration
+       , HasSscConfiguration
        , HasNodeConfiguration
        )
 
@@ -180,7 +180,7 @@ instance MonadThrow m => MonadThrow (RandT g m) where
 mkBlockGenContext
     :: forall ext ctx m.
        ( MonadBlockGenInit ctx m
-       , HasGtConfiguration
+       , HasSscConfiguration
        , HasNodeConfiguration
        , Default ext
        )
@@ -246,7 +246,7 @@ instance MonadBlockGenBase m => MonadDB (InitBlockGenMode ext m) where
     dbWriteBatch = DB.dbWriteBatchSumDefault
     dbDelete = DB.dbDeleteSumDefault
 
-instance (HasGtConfiguration, MonadBlockGenBase m) =>
+instance (HasSscConfiguration, MonadBlockGenBase m) =>
     MonadBlockDBGeneric BlockHeader Block Undo (InitBlockGenMode ext m)
   where
     dbGetBlock = BDB.dbGetBlockSumDefault
@@ -331,21 +331,21 @@ instance MonadBlockGenBase m => MonadDB (BlockGenMode ext m) where
     dbWriteBatch = DB.dbWriteBatchSumDefault
     dbDelete = DB.dbDeleteSumDefault
 
-instance (HasGtConfiguration, MonadBlockGenBase m) =>
+instance (HasSscConfiguration, MonadBlockGenBase m) =>
     MonadBlockDBGeneric BlockHeader Block Undo (BlockGenMode ext m)
   where
     dbGetBlock = BDB.dbGetBlockSumDefault
     dbGetUndo = BDB.dbGetUndoSumDefault
     dbGetHeader = BDB.dbGetHeaderSumDefault
 
-instance (HasGtConfiguration, MonadBlockGenBase m) =>
+instance (HasSscConfiguration, MonadBlockGenBase m) =>
     MonadBlockDBGeneric (Some IsHeader) SscBlock () (BlockGenMode ext m)
   where
     dbGetBlock = BDB.dbGetBlockSscSumDefault
     dbGetUndo = BDB.dbGetUndoSscSumDefault
     dbGetHeader = BDB.dbGetHeaderSscSumDefault
 
-instance (HasGtConfiguration, MonadBlockGenBase m) =>
+instance (HasSscConfiguration, MonadBlockGenBase m) =>
          MonadBlockDBGenericWrite BlockHeader Block Undo (BlockGenMode ext m) where
     dbPutBlund = BDB.dbPutBlundSumDefault
 
