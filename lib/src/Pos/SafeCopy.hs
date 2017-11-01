@@ -50,8 +50,8 @@ import           Pos.Delegation.Types            (DlgPayload (..))
 import           Pos.Merkle                      (MerkleNode (..), MerkleRoot (..),
                                                   MerkleTree (..))
 import           Pos.Ssc.Core                    (Commitment (..), CommitmentsMap,
-                                                  SscPayload (..), SscProof (..),
-                                                  Opening (..))
+                                                  Opening (..), SscPayload (..),
+                                                  SscProof (..))
 import           Pos.Txp.Core.Types              (Tx (..), TxIn (..), TxInWitness (..),
                                                   TxOut (..), TxOutAux (..),
                                                   TxPayload (..), TxProof (..))
@@ -97,7 +97,7 @@ instance Bi SecretProof => SafeCopy SecretProof where
     putCopy = Bi.putCopyBi
 
 ----------------------------------------------------------------------------
--- God tossing
+-- SSC
 ----------------------------------------------------------------------------
 
 deriveSafeCopySimple 0 'base ''VssCertificate

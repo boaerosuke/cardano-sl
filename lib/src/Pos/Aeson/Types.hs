@@ -9,7 +9,7 @@ import           Formatting       (build, sformat)
 import           Pos.Aeson.Crypto ()
 import           Pos.Txp          (TxOut (..))
 import           Pos.Types        (coinToInteger)
-import           Pos.Web.Types    (GodTossingStage)
+import           Pos.Web.Types    (SscStage)
 
 instance ToJSON TxOut where
     toJSON TxOut{..} = object [
@@ -22,4 +22,4 @@ instance ToJSON TxOut where
 -- If datatype is used on frontend, please use this instead of
 -- any other way of deriving if possible.
 
-deriveToJSON defaultOptions ''GodTossingStage
+deriveToJSON defaultOptions ''SscStage
